@@ -9,7 +9,13 @@ const Clarifai_app = new Clarifai.App({apiKey: API_keys.CLARIFAI_API_KEY});
 const app = express();
 const knex = KNEX({
   client: 'pg',
-  connection : 'postgres://postgres:336699@localhost/smartbrain'
+  connection: {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  }
+  // connection : 'postgres://postgres:336699@postgresql-flexible-56204/smartbrain'
 });
 
 app.use(express.json());
