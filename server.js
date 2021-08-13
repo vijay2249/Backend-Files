@@ -17,7 +17,7 @@ app.use(cors());
 
 
 // checking whether two or more response can be accepted or not
-app.get("/",(request, response)=>{console.log("Hi There, this is working, check it out")})
+app.get("/",(request, response)=>{res.status(200).json("Hi There, this is working, check it out")})
 
 // signin form is to confirm the user, so we get the input data and cross-verify with the data we have
 app.post("/signin", (request, response) =>{
