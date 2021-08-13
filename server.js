@@ -4,7 +4,7 @@ import cors from 'cors';
 import KNEX from 'knex';
 import Clarifai from 'clarifai'
 
-const API_keys = { CLARIFAI_API_KEY : "API_KEY_HERE" }
+const API_keys = { CLARIFAI_API_KEY : "cf71509d237b46b3b13826dd77b3b15d" }
 const Clarifai_app = new Clarifai.App({apiKey: API_keys.CLARIFAI_API_KEY});
 const app = express();
 const knex = KNEX({
