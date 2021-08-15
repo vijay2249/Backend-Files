@@ -4,8 +4,7 @@ import cors from 'cors';
 import KNEX from 'knex';
 import Clarifai from 'clarifai'
 
-const API_keys = { CLARIFAI_API_KEY : "cf71509d237b46b3b13826dd77b3b15d" }
-const Clarifai_app = new Clarifai.App({apiKey: API_keys.CLARIFAI_API_KEY});
+const Clarifai_app = new Clarifai.App({apiKey: process.env.CLARIFAI_API_KEY});
 const app = express();
 const knex = KNEX({
   client: 'pg',
@@ -15,17 +14,13 @@ const knex = KNEX({
       rejectUnauthorized: false
     }
   }
-  // connection : 'postgres://postgres:336699@postgresql-flexible-56204/smartbrain'
 });
 
 app.use(express.json());
 app.use(cors());
 
-
-// checking whether two or more response can be accepted or not
 app.get("/",(request, response)=>{response.status(200).json("Hi There, this is working, check it out")})
 
-// signin form is to confirm the user, so we get the input data and cross-verify with the data we have
 app.post("/signin", (request, response) =>{
   const { email, password } = request.body.signInData;
   knex.select('secret', 'email').from('login').where({email: email})
@@ -47,9 +42,6 @@ app.post("/signin", (request, response) =>{
     .catch(err => response.status(400).json("error"))
 })
 
-// register form is to accept new user and also check whether the details match with the previous user
-// if details match with the previous user then return already a member or use different credentials
-// if it is new user then add the data to the database.users array
 app.post("/register", (request,response)=>{
   const { email, username, password } = request.body.registerData;
   const secret = bcrypt.hashSync(password);
@@ -80,10 +72,6 @@ app.post("/register", (request,response)=>{
     .catch(err => {response.status(400).json("error")})
 })
 
-// if the user need to get the details for his/her profile
-// url /profile/:id -> the syntax ":id" means that we can grab the text whatever is replaced by id
-// like /profile/nail or /profile/vijay - in these urls we can grab the text nail or vijay from the urls 
-// then can cross verify with our database and then display their profile data this then have to be get request
 app.get("/profile/:username", (request, response)=>{
   const {username} = request.params;
   knex('userinfo').where({username})
@@ -99,9 +87,6 @@ app.get("/profile/:username", (request, response)=>{
     .catch(err => response.status(404).json("error"))
 })
 
-
-// ranking is based on the number of images user uploaded
-// /image to update the entries count
 app.put("/images",(request, response)=>{
   const { username, imageURL } = request.body;
   Clarifai_app.models.predict(Clarifai.FACE_DETECT_MODEL,imageURL)
