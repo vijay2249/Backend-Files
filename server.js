@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import cors from 'cors';
+import cors from 'cors'; //cross origin resource sharing middleware npm package
 import KNEX from 'knex';
 import Clarifai from 'clarifai'
 
@@ -16,9 +16,10 @@ const knex = KNEX({
   }
 });
 
-app.use(express.json());
+app.use(express.json()); //parse the incoming requests with JSON payloads and is based upon the bodyparser.
 app.use(cors());
 
+// app.get(<url route>, (request, response)=> {<function to do>})
 app.get("/",(request, response)=>{response.status(200).json("Hi There, this is working, check it out")})
 
 app.post("/signin", (request, response) =>{
